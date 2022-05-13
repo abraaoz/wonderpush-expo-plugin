@@ -9,10 +9,6 @@
     "lint": "eslint . --ext .ts",
     "prepare": "yarn run build"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/OneSignal/onesignal-expo-plugin.git"
-  },
   "keywords": [
     "expo",
     "onesignal",
@@ -28,10 +24,6 @@
     "Wojciech Kozyra"
   ],
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/OneSignal/onesignal-expo-plugin/issues"
-  },
-  "homepage": "https://github.com/OneSignal/onesignal-expo-plugin#readme",
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.10.1",
     "@typescript-eslint/parser": "^5.10.1",

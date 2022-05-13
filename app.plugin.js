@@ -1,1 +1,1 @@
-module.exports = require('./build/onesignal/withOneSignal.js');
+module.exports = require("./build/wonderpush/withWonderPush.js")
