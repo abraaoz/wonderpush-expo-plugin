@@ -7,9 +7,10 @@ import assert from 'assert'
 import fs from 'fs'
 import xcode from 'xcode'
 
-import {
-    ConfigPlugin, withEntitlementsPlist, withInfoPlist, withXcodeProject
-} from '@expo/config-plugins'
+// import {
+//     ConfigPlugin, withEntitlementsPlist, withInfoPlist, withXcodeProject
+// } from '@expo/config-plugins'
+import { ConfigPlugin, withInfoPlist, withXcodeProject } from '@expo/config-plugins'
 import { ExpoConfig } from '@expo/config-types'
 
 import getEasManagedCredentialsConfigExtra from '../support/eas/getEasManagedCredentialsConfigExtra'
@@ -27,24 +28,26 @@ import { PluginOptions, WonderPushPluginProps } from '../types/types'
  * Add 'aps-environment' record with current environment to '<project-name>.entitlements' file
  * @see https://documentation.onesignal.com/docs/react-native-sdk-setup#step-4-install-for-ios-using-cocoapods-for-ios-apps
  */
-const withAppEnvironment: ConfigPlugin<WonderPushPluginProps> = (config, wonderpushProps) => {
-  return withEntitlementsPlist(config, (newConfig) => {
-    if (wonderpushProps?.mode == null) {
-      throw new Error(`
-        Missing required "mode" key in your app.json or app.config.js file for "onesignal-expo-plugin".
-        "mode" can be either "development" or "production".
-        Please see onesignal-expo-plugin's README.md for more details.`)
-    }
-    newConfig.modResults["aps-environment"] = wonderpushProps.mode
-    return newConfig
-  })
-}
+// const withAppEnvironment: ConfigPlugin<WonderPushPluginProps> = (config, wonderpushProps) => {
+//   return withEntitlementsPlist(config, (newConfig) => {
+//     if (wonderpushProps?.mode == null) {
+//       throw new Error(`
+//         Missing required "mode" key in your app.json or app.config.js file for "onesignal-expo-plugin".
+//         "mode" can be either "development" or "production".
+//         Please see onesignal-expo-plugin's README.md for more details.`)
+//     }
+//     newConfig.modResults["aps-environment"] = wonderpushProps.mode
+//     return newConfig
+//   })
+// }
 
 /**
  * Add "Background Modes -> Remote notifications" and "App Group" permissions
  * @see https://documentation.onesignal.com/docs/react-native-sdk-setup#step-4-install-for-ios-using-cocoapods-for-ios-apps
  */
-const withRemoteNotificationsPermissions: ConfigPlugin<WonderPushPluginProps> = (config) => {
+const withRemoteNotificationsPermissions: ConfigPlugin<
+  WonderPushPluginProps
+> = (config) => {
   const BACKGROUND_MODE_KEYS = ["remote-notification"]
   return withInfoPlist(config, (newConfig) => {
     if (!Array.isArray(newConfig.modResults.UIBackgroundModes)) {
@@ -64,24 +67,27 @@ const withRemoteNotificationsPermissions: ConfigPlugin<WonderPushPluginProps> = 
  * Add "App Group" permission
  * @see https://documentation.onesignal.com/docs/react-native-sdk-setup#step-4-install-for-ios-using-cocoapods-for-ios-apps (step 4.4)
  */
-const withAppGroupPermissions: ConfigPlugin<WonderPushPluginProps> = (config) => {
-  const APP_GROUP_KEY = "com.apple.security.application-groups"
-  return withEntitlementsPlist(config, (newConfig) => {
-    if (!Array.isArray(newConfig.modResults[APP_GROUP_KEY])) {
-      newConfig.modResults[APP_GROUP_KEY] = []
-    }
-    const modResultsArray = newConfig.modResults[APP_GROUP_KEY] as Array<any>
-    const entitlement = `group.${newConfig?.ios?.bundleIdentifier || ""}.onesignal`
-    if (modResultsArray.indexOf(entitlement) !== -1) {
-      return newConfig
-    }
-    modResultsArray.push(entitlement)
+// const withAppGroupPermissions: ConfigPlugin<WonderPushPluginProps> = (config) => {
+//   const APP_GROUP_KEY = "com.apple.security.application-groups"
+//   return withEntitlementsPlist(config, (newConfig) => {
+//     if (!Array.isArray(newConfig.modResults[APP_GROUP_KEY])) {
+//       newConfig.modResults[APP_GROUP_KEY] = []
+//     }
+//     const modResultsArray = newConfig.modResults[APP_GROUP_KEY] as Array<any>
+//     const entitlement = `group.${newConfig?.ios?.bundleIdentifier || ""}.onesignal`
+//     if (modResultsArray.indexOf(entitlement) !== -1) {
+//       return newConfig
+//     }
+//     modResultsArray.push(entitlement)
 
-    return newConfig
-  })
-}
+//     return newConfig
+//   })
+// }
 
-const withWonderPushNSE: ConfigPlugin<WonderPushPluginProps> = (config, wonderpushProps) => {
+const withWonderPushNSE: ConfigPlugin<WonderPushPluginProps> = (
+  config,
+  wonderpushProps
+) => {
   return withXcodeProject(config, async (props) => {
     const options: PluginOptions = {
       iosPath: props.modRequest.platformProjectRoot,
@@ -96,20 +102,28 @@ const withWonderPushNSE: ConfigPlugin<WonderPushPluginProps> = (config, wonderpu
     xcodeProjectAddNse(
       props.modRequest.projectName || "",
       options,
-      "node_modules/wonderpush-expo-plugin/build/support/serviceExtensionFiles/",
+      "node_modules/wonderpush-expo-plugin/build/support/serviceExtensionFiles/"
     )
 
     return props
   })
 }
 
-const withEasManagedCredentials: ConfigPlugin<WonderPushPluginProps> = (config) => {
-  assert(config.ios?.bundleIdentifier, "Missing 'ios.bundleIdentifier' in app config.")
+const withEasManagedCredentials: ConfigPlugin<WonderPushPluginProps> = (
+  config
+) => {
+  assert(
+    config.ios?.bundleIdentifier,
+    "Missing 'ios.bundleIdentifier' in app config."
+  )
   config.extra = getEasManagedCredentialsConfigExtra(config as ExpoConfig)
   return config
 }
 
-export const withWonderPushIos: ConfigPlugin<WonderPushPluginProps> = (config, props) => {
+export const withWonderPushIos: ConfigPlugin<WonderPushPluginProps> = (
+  config,
+  props
+) => {
   // withAppEnvironment(config, props)
   withRemoteNotificationsPermissions(config, props)
   // withAppGroupPermissions(config, props)
@@ -121,7 +135,7 @@ export const withWonderPushIos: ConfigPlugin<WonderPushPluginProps> = (config, p
 export function xcodeProjectAddNse(
   appName: string,
   options: PluginOptions,
-  sourceDir: string,
+  sourceDir: string
 ): void {
   const {
     iosPath,
@@ -165,12 +179,22 @@ export function xcodeProjectAddNse(
 
     /* MODIFY COPIED EXTENSION FILES */
     const nseUpdater = new NseUpdaterManager(iosPath)
-    await nseUpdater.updateNSEEntitlements(`group.${bundleIdentifier}.onesignal`)
-    await nseUpdater.updateNSEBundleVersion(bundleVersion ?? DEFAULT_BUNDLE_VERSION)
-    await nseUpdater.updateNSEBundleShortVersion(bundleShortVersion ?? DEFAULT_BUNDLE_SHORT_VERSION)
+    await nseUpdater.updateNSEEntitlements(
+      `group.${bundleIdentifier}.onesignal`
+    )
+    await nseUpdater.updateNSEBundleVersion(
+      bundleVersion ?? DEFAULT_BUNDLE_VERSION
+    )
+    await nseUpdater.updateNSEBundleShortVersion(
+      bundleShortVersion ?? DEFAULT_BUNDLE_SHORT_VERSION
+    )
 
     // Create new PBXGroup for the extension
-    const extGroup = xcodeProject.addPbxGroup(extFiles, NSE_TARGET_NAME, NSE_TARGET_NAME)
+    const extGroup = xcodeProject.addPbxGroup(
+      extFiles,
+      NSE_TARGET_NAME,
+      NSE_TARGET_NAME
+    )
 
     // Add the new PBXGroup to the top level group. This makes the
     // files / folder appear in the file explorer in Xcode.
@@ -190,7 +214,9 @@ export function xcodeProjectAddNse(
     projObjects.PBXContainerItemProxy = projObjects.PBXTargetDependency || {}
 
     if (xcodeProject.pbxTargetByName(NSE_TARGET_NAME)) {
-      WonderPushLog.log(`${NSE_TARGET_NAME} already exists in project. Skipping...`)
+      WonderPushLog.log(
+        `${NSE_TARGET_NAME} already exists in project. Skipping...`
+      )
       return
     }
 
@@ -200,7 +226,7 @@ export function xcodeProjectAddNse(
       NSE_TARGET_NAME,
       "app_extension",
       NSE_TARGET_NAME,
-      `${bundleIdentifier}.${NSE_TARGET_NAME}`,
+      `${bundleIdentifier}.${NSE_TARGET_NAME}`
     )
 
     // Add build phases to the new target
@@ -208,11 +234,21 @@ export function xcodeProjectAddNse(
       ["NotificationService.m"],
       "PBXSourcesBuildPhase",
       "Sources",
-      nseTarget.uuid,
+      nseTarget.uuid
     )
-    xcodeProject.addBuildPhase([], "PBXResourcesBuildPhase", "Resources", nseTarget.uuid)
+    xcodeProject.addBuildPhase(
+      [],
+      "PBXResourcesBuildPhase",
+      "Resources",
+      nseTarget.uuid
+    )
 
-    xcodeProject.addBuildPhase([], "PBXFrameworksBuildPhase", "Frameworks", nseTarget.uuid)
+    xcodeProject.addBuildPhase(
+      [],
+      "PBXFrameworksBuildPhase",
+      "Frameworks",
+      nseTarget.uuid
+    )
 
     // Edit the Deployment info of the new Target, only IphoneOS and Targeted Device Family
     // However, can be more
