@@ -1,4 +1,4 @@
-import fs from 'fs'
+import * as fs from 'fs'
 
 import { FileManager } from './FileManager'
 import { NSE_PODFILE_REGEX, NSE_PODFILE_SNIPPET } from './iosConstants'
