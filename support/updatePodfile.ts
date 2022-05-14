@@ -1,4 +1,4 @@
-import * as fs from 'fs'
+import fs from 'fs'
 
 import { FileManager } from './FileManager'
 import { NSE_PODFILE_REGEX, NSE_PODFILE_SNIPPET } from './iosConstants'
@@ -10,7 +10,7 @@ export async function updatePodfile(iosPath: string) {
 
   if (matches) {
     WonderPushLog.log(
-      "WonderPushNotificationServiceExtension target already added to Podfile. Skipping...",
+      "WonderPushNotificationServiceExtension target already added to Podfile. Skipping..."
     )
   } else {
     fs.appendFile(`${iosPath}/Podfile`, NSE_PODFILE_SNIPPET, (err) => {
