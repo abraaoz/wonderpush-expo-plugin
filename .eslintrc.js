@@ -2,11 +2,6 @@ module.exports = {
   root: true,
   parser: "@typescript-eslint/parser",
   plugins: ["@typescript-eslint"],
-  overrides: [
-    {
-      files: ["*.ts", "*.tsx"], // Your TypeScript files extension
-    },
-  ],
   parserOptions: {
     project: "tsconfig.json",
   },
