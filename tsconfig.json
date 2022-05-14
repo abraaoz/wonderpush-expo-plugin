@@ -6,7 +6,10 @@
         "declaration": false
     },
     "include": [
-      "./"
+        "./wonderpush",
+        "./support",
+        "./types",
+        "./testRuniOS.ts"
     ],
     "exclude": [
         "**/__mocks__/*",

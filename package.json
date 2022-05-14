@@ -1,7 +1,7 @@
 {
-  "name": "onesignal-expo-plugin",
+  "name": "wonderpush-expo-plugin",
   "version": "1.0.2",
-  "description": "The OneSignal Expo plugin allows you to use OneSignal without leaving the managed workflow. Developed in collaboration with SweetGreen.",
+  "description": "Fork of the OneSignal Expo plugin for WonderPush",
   "main": "./app.plugin.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/OneSignal/onesignal-expo-plugin.git"
+    "url": "git+https://github.com/LinFeiLong/wonderpush-expo-plugin.git"
   },
   "keywords": [
     "expo",
@@ -29,9 +29,9 @@
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/OneSignal/onesignal-expo-plugin/issues"
+    "url": "https://github.com/LinFeiLong/onesignal-expo-plugin/issues"
   },
-  "homepage": "https://github.com/OneSignal/onesignal-expo-plugin#readme",
+  "homepage": "https://github.com/LinFeiLong/onesignal-expo-plugin#readme",
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.10.1",
     "@typescript-eslint/parser": "^5.10.1",

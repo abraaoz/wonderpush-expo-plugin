@@ -1,18 +1,18 @@
 module.exports = {
   root: true,
-  parser: '@typescript-eslint/parser',
+  parser: "@typescript-eslint/parser",
   plugins: [
-    '@typescript-eslint',
+    "@typescript-eslint"
   ],
   parserOptions: {
     project: "tsconfig.json",
 },
   extends: [
-    'eslint:recommended',
-    'plugin:@typescript-eslint/recommended',
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended"
   ],
   rules: {
     "@typescript-eslint/no-floating-promises": "error",
-    "no-extra-boolean-cast": "off"
-  }
-};
+    "no-extra-boolean-cast": "off",
+  },
+}

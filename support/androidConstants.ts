@@ -1,5 +1,8 @@
-export const ONESIGNAL_GRADLE =
-`buildscript {
+/**
+ * This file is not used
+ */
+
+export const ONESIGNAL_GRADLE = `buildscript {
     repositories {
         gradlePluginPortal()
     }
@@ -8,4 +11,4 @@ export const ONESIGNAL_GRADLE =
     }
 }
 
-apply plugin: 'com.onesignal.androidsdk.onesignal-gradle-plugin'`;
+apply plugin: 'com.onesignal.androidsdk.onesignal-gradle-plugin'`
