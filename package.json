@@ -29,9 +29,9 @@
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/OneSignal/onesignal-expo-plugin/issues"
+    "url": "https://github.com/LinFeiLong/onesignal-expo-plugin/issues"
   },
-  "homepage": "https://github.com/OneSignal/onesignal-expo-plugin#readme",
+  "homepage": "https://github.com/LinFeiLong/onesignal-expo-plugin#readme",
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.10.1",
     "@typescript-eslint/parser": "^5.10.1",
