@@ -5,6 +5,6 @@
     "outDir": "./build",
     "declaration": false
   },
-  "include": ["./wonderpush", "./support", "./types"],
+  "include": ["./wonderpush", "./support", "./types", "./testRuniOS.ts"],
   "exclude": ["**/__mocks__/*", "**/__tests__/*", "examples"]
 }
