@@ -1,5 +1,5 @@
 {
-  "name": "onesignal-expo-plugin",
+  "name": "wonderpush-expo-plugin",
   "version": "1.0.2",
   "description": "The OneSignal Expo plugin allows you to use OneSignal without leaving the managed workflow. Developed in collaboration with SweetGreen.",
   "main": "./app.plugin.js",
