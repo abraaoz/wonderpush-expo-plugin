@@ -137,21 +137,22 @@ const withAppDelegateCredentials: ConfigPlugin<WonderPushPluginProps> = (
 `
     )
 
-    config.modResults.contents =
-      config.modResults.contents +
-      `
+    config.modResults.contents = config.modResults.contents.replace(
+      `@implementation AppDelegate`,
+      `@implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application willFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
   [WonderPush setClientId:@"` +
-      props.wonderPushClientId +
-      `" secret:@"` +
-      props.wonderPushClientSecret +
-      `"];
+        props.wonderPushClientId +
+        `" secret:@"` +
+        props.wonderPushClientSecret +
+        `"];
   [WonderPush setupDelegateForApplication:application];
   [WonderPush setupDelegateForUserNotificationCenter];
   return YES;
 }
 `
+    )
 
     return config
   })
