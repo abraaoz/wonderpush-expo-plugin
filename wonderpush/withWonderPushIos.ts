@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * Expo config plugin for One Signal (iOS)
  * @see https://documentation.onesignal.com/docs/react-native-sdk-setup#step-4-install-for-ios-using-cocoapods-for-ios-apps
@@ -66,22 +67,22 @@ const withRemoteNotificationsPermissions: ConfigPlugin<
  * Add "App Group" permission
  * @see https://documentation.onesignal.com/docs/react-native-sdk-setup#step-4-install-for-ios-using-cocoapods-for-ios-apps (step 4.4)
  */
-// const withAppGroupPermissions: ConfigPlugin<WonderPushPluginProps> = (config) => {
-//   const APP_GROUP_KEY = "com.apple.security.application-groups"
-//   return withEntitlementsPlist(config, (newConfig) => {
-//     if (!Array.isArray(newConfig.modResults[APP_GROUP_KEY])) {
-//       newConfig.modResults[APP_GROUP_KEY] = []
-//     }
-//     const modResultsArray = newConfig.modResults[APP_GROUP_KEY] as Array<any>
-//     const entitlement = `group.${newConfig?.ios?.bundleIdentifier || ""}.wonderpush`
-//     if (modResultsArray.indexOf(entitlement) !== -1) {
-//       return newConfig
-//     }
-//     modResultsArray.push(entitlement)
+const withAppGroupPermissions: ConfigPlugin<WonderPushPluginProps> = (config) => {
+  const APP_GROUP_KEY = "com.apple.security.application-groups"
+  return withEntitlementsPlist(config, (newConfig) => {
+    if (!Array.isArray(newConfig.modResults[APP_GROUP_KEY])) {
+      newConfig.modResults[APP_GROUP_KEY] = []
+    }
+    const modResultsArray = newConfig.modResults[APP_GROUP_KEY] as Array<any>
+    const entitlement = `group.${newConfig?.ios?.bundleIdentifier || ""}.wonderpush`
+    if (modResultsArray.indexOf(entitlement) !== -1) {
+      return newConfig
+    }
+    modResultsArray.push(entitlement)
 
-//     return newConfig
-//   })
-// }
+    return newConfig
+  })
+}
 
 const withWonderPushNSE: ConfigPlugin<WonderPushPluginProps> = (
   config,
@@ -162,7 +163,7 @@ export const withWonderPushIos: ConfigPlugin<WonderPushPluginProps> = (
 ) => {
   withAppEnvironment(config, props)
   withRemoteNotificationsPermissions(config, props)
-  // withAppGroupPermissions(config, props)
+  withAppGroupPermissions(config, props)
   withWonderPushNSE(config, props)
   withEasManagedCredentials(config, props)
   withAppDelegateCredentials(config, props)
@@ -194,7 +195,7 @@ export function xcodeProjectAddNse(
   const extFiles = [
     "NotificationService.h",
     "NotificationService.m",
-    // `${NSE_TARGET_NAME}.entitlements`,
+    `${NSE_TARGET_NAME}.entitlements`,
     `${NSE_TARGET_NAME}-Info.plist`,
   ]
 
@@ -232,9 +233,9 @@ export function xcodeProjectAddNse(
 
     /* MODIFY COPIED EXTENSION FILES */
     const nseUpdater = new NseUpdaterManager(iosPath)
-    // await nseUpdater.updateNSEEntitlements(
-    //   `group.${bundleIdentifier}.wonderpush`
-    // )
+    await nseUpdater.updateNSEEntitlements(
+      `group.${bundleIdentifier}.WonderPushNotificationServiceExtension`
+    )
     await nseUpdater.updateNSEBundleVersion(
       bundleVersion ?? DEFAULT_BUNDLE_VERSION
     )
@@ -316,7 +317,7 @@ export function xcodeProjectAddNse(
         buildSettingsObj.IPHONEOS_DEPLOYMENT_TARGET =
           iPhoneDeploymentTarget ?? IPHONEOS_DEPLOYMENT_TARGET
         buildSettingsObj.TARGETED_DEVICE_FAMILY = TARGETED_DEVICE_FAMILY
-        // buildSettingsObj.CODE_SIGN_ENTITLEMENTS = `${NSE_TARGET_NAME}/${NSE_TARGET_NAME}.entitlements`
+        buildSettingsObj.CODE_SIGN_ENTITLEMENTS = `${NSE_TARGET_NAME}/${NSE_TARGET_NAME}.entitlements`
         buildSettingsObj.CODE_SIGN_STYLE = "Automatic"
       }
     }
