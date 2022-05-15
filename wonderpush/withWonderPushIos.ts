@@ -207,10 +207,10 @@ export function xcodeProjectAddNse(
       await FileManager.copyFile(`${sourceDir}${extFile}`, targetFile)
 
       if (extFile === "NotificationService.h") {
-        const hFile = await FileManager.readFile(targetFile)
+        let hFile = await FileManager.readFile(targetFile)
 
-        hFile.replace(`return @"YOUR_CLIENT_ID"`, `return @"` + wonderpushProps.wonderPushClientId + `"`)
-        hFile.replace(`return @"YOUR_CLIENT_SECRET"`, `return @"` + wonderpushProps.wonderPushClientSecret + `"`)
+        hFile = hFile.replace(`return @"YOUR_CLIENT_ID"`, `return @"` + wonderpushProps.wonderPushClientId + `"`)
+        hFile = hFile.replace(`return @"YOUR_CLIENT_SECRET"`, `return @"` + wonderpushProps.wonderPushClientSecret + `"`)
 
         await FileManager.writeFile(targetFile, hFile)
       }
