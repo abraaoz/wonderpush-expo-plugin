@@ -10,7 +10,9 @@ import xcode from 'xcode'
 // import {
 //     ConfigPlugin, withEntitlementsPlist, withInfoPlist, withXcodeProject
 // } from '@expo/config-plugins'
-import { ConfigPlugin, withInfoPlist, withXcodeProject } from '@expo/config-plugins'
+import {
+    ConfigPlugin, withAppDelegate, withInfoPlist, withXcodeProject
+} from '@expo/config-plugins'
 import { ExpoConfig } from '@expo/config-types'
 
 import getEasManagedCredentialsConfigExtra from '../support/eas/getEasManagedCredentialsConfigExtra'
@@ -120,6 +122,31 @@ const withEasManagedCredentials: ConfigPlugin<WonderPushPluginProps> = (
   return config
 }
 
+const withAppDelegateCredentials: ConfigPlugin<WonderPushPluginProps> = (config) => {
+  return withAppDelegate(config, async (config) => {
+    config.modResults.contents = config.modResults.contents.replace(
+      `#import "AppDelegate.h`,
+      `#import "AppDelegate.h
+
+#import <WonderPush/WonderPush.h>
+
+`
+    )
+
+    config.modResults.contents = config.modResults.contents + `
+
+- (BOOL)application:(UIApplication *)application willFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+  [WonderPush setClientId:@"3efc3669210859c866292ef3540c768631901298" secret:@"2b23a050ce4e31f339c6f622043726c71e29b45b5e6d6228bda63c2e4621ae7f"];
+  [WonderPush setupDelegateForApplication:application];
+  [WonderPush setupDelegateForUserNotificationCenter];
+  return YES;
+}
+`
+
+    return config
+  })
+}
+
 export const withWonderPushIos: ConfigPlugin<WonderPushPluginProps> = (
   config,
   props
@@ -129,6 +156,7 @@ export const withWonderPushIos: ConfigPlugin<WonderPushPluginProps> = (
   // withAppGroupPermissions(config, props)
   withWonderPushNSE(config, props)
   withEasManagedCredentials(config, props)
+  withAppDelegateCredentials(config, props)
   return config
 }
 
