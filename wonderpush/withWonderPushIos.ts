@@ -74,7 +74,7 @@ const withAppGroupPermissions: ConfigPlugin<WonderPushPluginProps> = (config) =>
       newConfig.modResults[APP_GROUP_KEY] = []
     }
     const modResultsArray = newConfig.modResults[APP_GROUP_KEY] as Array<any>
-    const entitlement = `group.${newConfig?.ios?.bundleIdentifier || ""}.wonderpush`
+    const entitlement = `group.${newConfig?.ios?.bundleIdentifier || ""}.WonderPushNotificationServiceExtension`
     if (modResultsArray.indexOf(entitlement) !== -1) {
       return newConfig
     }
