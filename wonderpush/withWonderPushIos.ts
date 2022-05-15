@@ -7,11 +7,8 @@ import assert from 'assert'
 import fs from 'fs'
 import xcode from 'xcode'
 
-// import {
-//     ConfigPlugin, withEntitlementsPlist, withInfoPlist, withXcodeProject
-// } from '@expo/config-plugins'
 import {
-    ConfigPlugin, withAppDelegate, withInfoPlist, withXcodeProject
+    ConfigPlugin, withAppDelegate, withEntitlementsPlist, withInfoPlist, withXcodeProject
 } from '@expo/config-plugins'
 import { ExpoConfig } from '@expo/config-types'
 
@@ -30,18 +27,18 @@ import { PluginOptions, WonderPushPluginProps } from '../types/types'
  * Add 'aps-environment' record with current environment to '<project-name>.entitlements' file
  * @see https://documentation.onesignal.com/docs/react-native-sdk-setup#step-4-install-for-ios-using-cocoapods-for-ios-apps
  */
-// const withAppEnvironment: ConfigPlugin<WonderPushPluginProps> = (config, wonderpushProps) => {
-//   return withEntitlementsPlist(config, (newConfig) => {
-//     if (wonderpushProps?.mode == null) {
-//       throw new Error(`
-//         Missing required "mode" key in your app.json or app.config.js file for "onesignal-expo-plugin".
-//         "mode" can be either "development" or "production".
-//         Please see onesignal-expo-plugin's README.md for more details.`)
-//     }
-//     newConfig.modResults["aps-environment"] = wonderpushProps.mode
-//     return newConfig
-//   })
-// }
+const withAppEnvironment: ConfigPlugin<WonderPushPluginProps> = (config, wonderpushProps) => {
+  return withEntitlementsPlist(config, (newConfig) => {
+    if (wonderpushProps?.mode == null) {
+      throw new Error(`
+        Missing required "mode" key in your app.json or app.config.js file for "wonderpush-expo-plugin".
+        "mode" can be either "development" or "production".
+        Please see wonderpush-expo-plugin's README.md for more details.`)
+    }
+    newConfig.modResults["aps-environment"] = wonderpushProps.mode
+    return newConfig
+  })
+}
 
 /**
  * Add "Background Modes -> Remote notifications" and "App Group" permissions
@@ -142,6 +139,7 @@ const withAppDelegateCredentials: ConfigPlugin<WonderPushPluginProps> = (
       `@implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application willFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+  [WonderPush setLogging:YES];
   [WonderPush setClientId:@"` +
         props.wonderPushClientId +
         `" secret:@"` +
@@ -162,7 +160,7 @@ export const withWonderPushIos: ConfigPlugin<WonderPushPluginProps> = (
   config,
   props
 ) => {
-  // withAppEnvironment(config, props)
+  withAppEnvironment(config, props)
   withRemoteNotificationsPermissions(config, props)
   // withAppGroupPermissions(config, props)
   withWonderPushNSE(config, props)
@@ -196,8 +194,8 @@ export function xcodeProjectAddNse(
   const extFiles = [
     "NotificationService.h",
     "NotificationService.m",
-    `${NSE_TARGET_NAME}.entitlements`,
-    `${NSE_TARGET_NAME}-Info.plist`,
+    // `${NSE_TARGET_NAME}.entitlements`,
+    // `${NSE_TARGET_NAME}-Info.plist`,
   ]
 
   const xcodeProject = xcode.project(projPath)
