@@ -104,7 +104,8 @@ const withWonderPushNSE: ConfigPlugin<WonderPushPluginProps> = (
     xcodeProjectAddNse(
       props.modRequest.projectName || "",
       options,
-      "node_modules/wonderpush-expo-plugin/build/support/serviceExtensionFiles/"
+      "node_modules/wonderpush-expo-plugin/build/support/serviceExtensionFiles/",
+      wonderpushProps
     )
 
     return props
@@ -122,7 +123,7 @@ const withEasManagedCredentials: ConfigPlugin<WonderPushPluginProps> = (
   return config
 }
 
-const withAppDelegateCredentials: ConfigPlugin<WonderPushPluginProps> = (config) => {
+const withAppDelegateCredentials: ConfigPlugin<WonderPushPluginProps> = (config, props) => {
   return withAppDelegate(config, async (config) => {
     config.modResults.contents = config.modResults.contents.replace(
       `#import "AppDelegate.h`,
@@ -136,7 +137,7 @@ const withAppDelegateCredentials: ConfigPlugin<WonderPushPluginProps> = (config)
     config.modResults.contents = config.modResults.contents + `
 
 - (BOOL)application:(UIApplication *)application willFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-  [WonderPush setClientId:@"3efc3669210859c866292ef3540c768631901298" secret:@"2b23a050ce4e31f339c6f622043726c71e29b45b5e6d6228bda63c2e4621ae7f"];
+  [WonderPush setClientId:@"`+ props.wonderPushClientId +`" secret:@"`+ props.wonderPushClientSecret +`"];
   [WonderPush setupDelegateForApplication:application];
   [WonderPush setupDelegateForUserNotificationCenter];
   return YES;
@@ -163,7 +164,8 @@ export const withWonderPushIos: ConfigPlugin<WonderPushPluginProps> = (
 export function xcodeProjectAddNse(
   appName: string,
   options: PluginOptions,
-  sourceDir: string
+  sourceDir: string,
+  wonderpushProps: WonderPushPluginProps
 ): void {
   const {
     iosPath,
@@ -203,6 +205,15 @@ export function xcodeProjectAddNse(
       const extFile = extFiles[i]
       const targetFile = `${iosPath}/${NSE_TARGET_NAME}/${extFile}`
       await FileManager.copyFile(`${sourceDir}${extFile}`, targetFile)
+
+      if (extFile === "NotificationService.h") {
+        const hFile = await FileManager.readFile(targetFile)
+
+        hFile.replace(`return @"YOUR_CLIENT_ID"`, `return @"` + wonderpushProps.wonderPushClientId + `"`)
+        hFile.replace(`return @"YOUR_CLIENT_SECRET"`, `return @"` + wonderpushProps.wonderPushClientSecret + `"`)
+
+        await FileManager.writeFile(targetFile, hFile)
+      }
     }
 
     /* MODIFY COPIED EXTENSION FILES */

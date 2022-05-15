@@ -8,6 +8,9 @@ export type WonderPushPluginProps = {
   mode: Mode
   devTeam: string
   iPhoneDeploymentTarget: string
+  wonderPushClientId: string
+  wonderPushClientSecret: string
+  wonderPushSenderId: string
 }
 
 /**
