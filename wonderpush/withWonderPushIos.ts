@@ -129,8 +129,8 @@ const withAppDelegateCredentials: ConfigPlugin<WonderPushPluginProps> = (
 ) => {
   return withAppDelegate(config, async (config) => {
     config.modResults.contents = config.modResults.contents.replace(
-      `#import "AppDelegate.h`,
-      `#import "AppDelegate.h
+      `#import "AppDelegate.h"`,
+      `#import "AppDelegate.h"
 
 #import <WonderPush/WonderPush.h>
 
