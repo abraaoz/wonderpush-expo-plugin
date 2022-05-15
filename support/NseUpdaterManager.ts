@@ -1,11 +1,10 @@
 import { FileManager } from './FileManager'
 import {
-    BUNDLE_SHORT_VERSION_TEMPLATE_REGEX, BUNDLE_VERSION_TEMPLATE_REGEX,
-    GROUP_IDENTIFIER_TEMPLATE_REGEX, NSE_TARGET_NAME
+    BUNDLE_SHORT_VERSION_TEMPLATE_REGEX, BUNDLE_VERSION_TEMPLATE_REGEX, NSE_TARGET_NAME
 } from './iosConstants'
 
 // project `ios/WonderPushNotificationServiceExtension` directory
-const entitlementsFileName = `WonderPushNotificationServiceExtension.entitlements`
+// const entitlementsFileName = `WonderPushNotificationServiceExtension.entitlements`
 const plistFileName = `WonderPushNotificationServiceExtension-Info.plist`
 
 export default class NseUpdaterManager {
@@ -14,13 +13,13 @@ export default class NseUpdaterManager {
     this.nsePath = `${iosPath}/${NSE_TARGET_NAME}`
   }
 
-  async updateNSEEntitlements(groupIdentifier: string): Promise<void> {
-    const entitlementsFilePath = `${this.nsePath}/${entitlementsFileName}`
-    let entitlementsFile = await FileManager.readFile(entitlementsFilePath)
+  // async updateNSEEntitlements(groupIdentifier: string): Promise<void> {
+  //   const entitlementsFilePath = `${this.nsePath}/${entitlementsFileName}`
+  //   let entitlementsFile = await FileManager.readFile(entitlementsFilePath)
 
-    entitlementsFile = entitlementsFile.replace(GROUP_IDENTIFIER_TEMPLATE_REGEX, groupIdentifier)
-    await FileManager.writeFile(entitlementsFilePath, entitlementsFile)
-  }
+  //   entitlementsFile = entitlementsFile.replace(GROUP_IDENTIFIER_TEMPLATE_REGEX, groupIdentifier)
+  //   await FileManager.writeFile(entitlementsFilePath, entitlementsFile)
+  // }
 
   async updateNSEBundleVersion(version: string): Promise<void> {
     const plistFilePath = `${this.nsePath}/${plistFileName}`

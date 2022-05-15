@@ -195,7 +195,7 @@ export function xcodeProjectAddNse(
     "NotificationService.h",
     "NotificationService.m",
     // `${NSE_TARGET_NAME}.entitlements`,
-    // `${NSE_TARGET_NAME}-Info.plist`,
+    `${NSE_TARGET_NAME}-Info.plist`,
   ]
 
   const xcodeProject = xcode.project(projPath)
@@ -232,9 +232,9 @@ export function xcodeProjectAddNse(
 
     /* MODIFY COPIED EXTENSION FILES */
     const nseUpdater = new NseUpdaterManager(iosPath)
-    await nseUpdater.updateNSEEntitlements(
-      `group.${bundleIdentifier}.wonderpush`
-    )
+    // await nseUpdater.updateNSEEntitlements(
+    //   `group.${bundleIdentifier}.wonderpush`
+    // )
     await nseUpdater.updateNSEBundleVersion(
       bundleVersion ?? DEFAULT_BUNDLE_VERSION
     )
@@ -316,7 +316,7 @@ export function xcodeProjectAddNse(
         buildSettingsObj.IPHONEOS_DEPLOYMENT_TARGET =
           iPhoneDeploymentTarget ?? IPHONEOS_DEPLOYMENT_TARGET
         buildSettingsObj.TARGETED_DEVICE_FAMILY = TARGETED_DEVICE_FAMILY
-        buildSettingsObj.CODE_SIGN_ENTITLEMENTS = `${NSE_TARGET_NAME}/${NSE_TARGET_NAME}.entitlements`
+        // buildSettingsObj.CODE_SIGN_ENTITLEMENTS = `${NSE_TARGET_NAME}/${NSE_TARGET_NAME}.entitlements`
         buildSettingsObj.CODE_SIGN_STYLE = "Automatic"
       }
     }
