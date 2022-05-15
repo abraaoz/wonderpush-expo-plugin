@@ -76,7 +76,7 @@ const withRemoteNotificationsPermissions: ConfigPlugin<
 //       newConfig.modResults[APP_GROUP_KEY] = []
 //     }
 //     const modResultsArray = newConfig.modResults[APP_GROUP_KEY] as Array<any>
-//     const entitlement = `group.${newConfig?.ios?.bundleIdentifier || ""}.onesignal`
+//     const entitlement = `group.${newConfig?.ios?.bundleIdentifier || ""}.wonderpush`
 //     if (modResultsArray.indexOf(entitlement) !== -1) {
 //       return newConfig
 //     }
@@ -123,7 +123,10 @@ const withEasManagedCredentials: ConfigPlugin<WonderPushPluginProps> = (
   return config
 }
 
-const withAppDelegateCredentials: ConfigPlugin<WonderPushPluginProps> = (config, props) => {
+const withAppDelegateCredentials: ConfigPlugin<WonderPushPluginProps> = (
+  config,
+  props
+) => {
   return withAppDelegate(config, async (config) => {
     config.modResults.contents = config.modResults.contents.replace(
       `#import "AppDelegate.h`,
@@ -134,10 +137,16 @@ const withAppDelegateCredentials: ConfigPlugin<WonderPushPluginProps> = (config,
 `
     )
 
-    config.modResults.contents = config.modResults.contents + `
+    config.modResults.contents =
+      config.modResults.contents +
+      `
 
 - (BOOL)application:(UIApplication *)application willFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-  [WonderPush setClientId:@"`+ props.wonderPushClientId +`" secret:@"`+ props.wonderPushClientSecret +`"];
+  [WonderPush setClientId:@"` +
+      props.wonderPushClientId +
+      `" secret:@"` +
+      props.wonderPushClientSecret +
+      `"];
   [WonderPush setupDelegateForApplication:application];
   [WonderPush setupDelegateForUserNotificationCenter];
   return YES;
@@ -209,8 +218,14 @@ export function xcodeProjectAddNse(
       if (extFile === "NotificationService.h") {
         let hFile = await FileManager.readFile(targetFile)
 
-        hFile = hFile.replace(`return @"YOUR_CLIENT_ID"`, `return @"` + wonderpushProps.wonderPushClientId + `"`)
-        hFile = hFile.replace(`return @"YOUR_CLIENT_SECRET"`, `return @"` + wonderpushProps.wonderPushClientSecret + `"`)
+        hFile = hFile.replace(
+          `return @"YOUR_CLIENT_ID"`,
+          `return @"` + wonderpushProps.wonderPushClientId + `"`
+        )
+        hFile = hFile.replace(
+          `return @"YOUR_CLIENT_SECRET"`,
+          `return @"` + wonderpushProps.wonderPushClientSecret + `"`
+        )
 
         await FileManager.writeFile(targetFile, hFile)
       }
@@ -219,7 +234,7 @@ export function xcodeProjectAddNse(
     /* MODIFY COPIED EXTENSION FILES */
     const nseUpdater = new NseUpdaterManager(iosPath)
     await nseUpdater.updateNSEEntitlements(
-      `group.${bundleIdentifier}.onesignal`
+      `group.${bundleIdentifier}.wonderpush`
     )
     await nseUpdater.updateNSEBundleVersion(
       bundleVersion ?? DEFAULT_BUNDLE_VERSION
