@@ -1,24 +1,13 @@
-<h1 align="center">Welcome to onesignal-expo-plugin 👋</h1>
-<p>
-  <img alt="Version" src="https://img.shields.io/badge/version-1.0.1-blue.svg?cacheSeconds=2592000" />
-  <a href="https://github.com/OneSignal/onesignal-expo-plugin#readme" target="_blank">
-    <img alt="Documentation" src="https://img.shields.io/badge/documentation-yes-brightgreen.svg" />
-  </a>
-  <a href="https://github.com/OneSignal/onesignal-expo-plugin/graphs/commit-activity" target="_blank">
-    <img alt="Maintenance" src="https://img.shields.io/badge/Maintained%3F-yes-green.svg" />
-  </a>
-  <a href="https://twitter.com/onesignal" target="_blank">
-    <img alt="Twitter: onesignal" src="https://img.shields.io/twitter/follow/onesignal.svg?style=social" />
-  </a>
-</p>
+<h1 align="center">Welcome to wonderpush-expo-plugin. 👋</h1>
+<p>Based on <a href="https://github.com/OneSignal/onesignal-expo-plugin#readme" target="_blank">onesignal-expo-plugin</a></p>
 
-> The OneSignal Expo plugin allows you to use OneSignal without leaving the managed workflow. Developed in collaboration with SweetGreen.
+> The WonderPush Expo plugin allows you to use WonderPush without leaving the managed workflow.
 
-* 🏠 [Homepage](https://github.com/OneSignal/onesignal-expo-plugin#readme)
-* 🖤 [npm](https://www.npmjs.com/package/onesignal-expo-plugin)
+* 🏠 [Homepage](https://github.com/creative-web-solution/wonderpush-expo-plugin#readme)
+* Forked from [https://github.com/LinFeiLong/wonderpush-expo-plugin]()
 
 ## Overview
-This plugin is an [Expo Config Plugin](https://docs.expo.dev/guides/config-plugins/). It extends the Expo config to allow customizing the prebuild phase of managed workflow builds (no need to eject to a bare workflow). For the purposes of OneSignal integration, the plugin facilitates automatically generating/configuring the necessary native code files needed to get the [OneSignal React-Native SDK](https://github.com/OneSignal/react-native-onesignal) to work. You can think of adding a plugin as adding custom native code.
+This plugin is an [Expo Config Plugin](https://docs.expo.dev/guides/config-plugins/). It extends the Expo config to allow customizing the prebuild phase of managed workflow builds (no need to eject to a bare workflow).
 
 ## Supported environments:
 * [The Expo run commands](https://docs.expo.dev/workflow/customizing/) (`expo run:[android|ios]`)
@@ -29,14 +18,16 @@ This plugin is an [Expo Config Plugin](https://docs.expo.dev/guides/config-plugi
 
 ## Install
 
-```sh
-expo install onesignal-expo-plugin
+Add this to the package.json
 
-# npm
-npm install react-native-onesignal
-
-# yarn
-yarn add react-native-onesignal
+```json
+{
+  ...,
+  "devDependencies": {
+    ...,
+    "wonderpush-expo-plugin": "https://github.com/creative-web-solution/wonderpush-expo-plugin.git"
+  }
+}
 ```
 
 ## Configuration in app.json / app.config.js
@@ -48,9 +39,13 @@ Add the plugin to the [plugin array](https://docs.expo.dev/versions/latest/confi
 {
   "plugins": [
     [
-      "onesignal-expo-plugin",
+      "wonderpush-expo-plugin",
       {
         "mode": "development",
+        "wonderPushClientId": "",
+        "wonderPushClientSecret": "",
+        "wonderPushSenderId": "",
+        "devTeam": "",
       }
     ]
   ]
@@ -65,9 +60,13 @@ export default {
   ...
   plugins: [
     [
-      "onesignal-expo-plugin",
+      "wonderpush-expo-plugin",
       {
-        mode: "development",
+        "mode": "development",
+        "wonderPushClientId": "",
+        "wonderPushClientSecret": "",
+        "wonderPushSenderId": "",
+        "devTeam": "",
       }
     ]
   ]
@@ -81,33 +80,6 @@ You can pass props to the plugin config object to configure:
 |--------------------------|----------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `mode`                   | **required** | Used to configure  [APNs environment](https://developer.apple.com/documentation/bundleresources/entitlements/aps-environment)  entitlement.  `"development"` or  `"production"`                                                                                                                                                |
 | `devTeam`                | optional | Used to configure Apple Team ID. You can find your Apple Team ID by running `expo credentials:manager`  e.g: `"91SW8A37CR"`                                                                                                                                                                                                    |
-| `iPhoneDeploymentTarget` | optional | Target `IPHONEOS_DEPLOYMENT_TARGET` value to be used when adding the iOS [NSE](https://documentation.onesignal.com/docs/service-extensions). A deployment target is nothing more than the minimum version of the operating system the application can run on. This value should match the value in your Podfile e.g: `"12.0"`. |
-
-### OneSignal App ID
-Add your OneSignal App ID to your [Expo constants via the `extra` param](https://docs.expo.dev/versions/latest/config/app/):
-
-**Example:**
-```json
-{
-  "extra": {
-    "oneSignalAppId": "<YOUR APP ID HERE>"
-  }
-}
-```
-
-You can then access the value to pass to the `setAppId` function:
-
-```js
-import OneSignal from 'react-native-onesignal';
-import Constants from "expo-constants";
-OneSignal.setAppId(Constants.manifest.extra.oneSignalAppId);
-```
-
-Alternatively, pass the app ID directly to the function:
-
-```js
-OneSignal.setAppId("YOUR-ONESIGNAL-APP-ID");
-```
 
 ### Versioning
 In your configuration file, make sure you set:
@@ -156,21 +128,6 @@ expo run:android
 ```
 
 ---
-
-## 🤝 Contributing
-
-Contributions, issues and feature requests are welcome!<br />Feel free to check [issues page](https://github.com/OneSignal/onesignal-expo-plugin/issues).
-
-## Show your support
-
-Give a ⭐️ if this project helped you!
-
-## OneSignal
-
-* Website: https://onesignal.com
-* Twitter: [@onesignal](https://twitter.com/onesignal)
-* Github: [@OneSignal](https://github.com/OneSignal)
-* LinkedIn: [@onesignal](https://linkedin.com/company/onesignal)
 
 ## 📝 License
 
