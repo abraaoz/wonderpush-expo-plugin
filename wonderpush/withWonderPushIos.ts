@@ -150,6 +150,12 @@ const withAppDelegateCredentials: ConfigPlugin<WonderPushPluginProps> = (
   [WonderPush setupDelegateForUserNotificationCenter];
   return YES;
 }
+- (void)applicationDidBecomeActive:(UIApplication *)application{
+  [UIApplication sharedApplication].applicationIconBadgeNumber = 0; 
+}
+-(void)applicationDidEnterBackground:(UIApplication *)application{
+  [UIApplication sharedApplication].applicationIconBadgeNumber = 0;
+}
 `
     )
 
