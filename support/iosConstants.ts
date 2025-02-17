@@ -3,7 +3,8 @@ export const TARGETED_DEVICE_FAMILY = `"1,2"`;
 
 export const NSE_PODFILE_SNIPPET = `
 target 'WonderPushNotificationServiceExtension' do
-  platform :ios, '10.0'
+  use_frameworks!
+  platform :ios, '15.1'
 
   # Pods for WonderPushNotificationServiceExtension
   pod 'WonderPushExtension', '~> 4.0'
