@@ -102,24 +102,24 @@ const appDelegate = [
         insert: `#import <WonderPush/WonderPush.h>`,
     },
     {
-        insert: `  [WonderPush application:application didFinishLaunchingWithOptions:launchOptions];`,
-        before: `return [super application:application didFinishLaunchingWithOptions:launchOptions];`,
+        insert: `[WonderPush application:application didFinishLaunchingWithOptions:launchOptions];`,
+        before: `  return [super application:application didFinishLaunchingWithOptions:launchOptions];`,
     },
     {
-        insert: `  [WonderPush application:application didRegisterForRemoteNotificationsWithDeviceToken:deviceToken];`,
-        before: `return [super application:application didRegisterForRemoteNotificationsWithDeviceToken:deviceToken];`,
+        insert: `[WonderPush application:application didRegisterForRemoteNotificationsWithDeviceToken:deviceToken];`,
+        before: `  return [super application:application didRegisterForRemoteNotificationsWithDeviceToken:deviceToken];`,
     },
     {
-        insert: `  [WonderPush application:application didRegisterForRemoteNotificationsWithDeviceToken:deviceToken];`,
-        before: `return [super application:application didRegisterForRemoteNotificationsWithDeviceToken:deviceToken];`,
+        insert: `[WonderPush application:application didRegisterForRemoteNotificationsWithDeviceToken:deviceToken];`,
+        before: `  return [super application:application didRegisterForRemoteNotificationsWithDeviceToken:deviceToken];`,
     },
     {
-        insert: `  [WonderPush application:application didFailToRegisterForRemoteNotificationsWithError:error];`,
-        before: `return [super application:application didFailToRegisterForRemoteNotificationsWithError:error];`,
+        insert: `[WonderPush application:application didFailToRegisterForRemoteNotificationsWithError:error];`,
+        before: `  return [super application:application didFailToRegisterForRemoteNotificationsWithError:error];`,
     },
     {
-        insert: `  [WonderPush application:application didReceiveRemoteNotification:userInfo fetchCompletionHandler:completionHandler];`,
-        before: `return [super application:application didReceiveRemoteNotification:userInfo fetchCompletionHandler:completionHandler];`,
+        insert: `[WonderPush application:application didReceiveRemoteNotification:userInfo fetchCompletionHandler:completionHandler];`,
+        before: `  return [super application:application didReceiveRemoteNotification:userInfo fetchCompletionHandler:completionHandler];`,
     },
     {
         after: `@implementation AppDelegate`,
