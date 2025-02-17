@@ -4,7 +4,7 @@
 > The WonderPush Expo plugin allows you to use WonderPush without leaving the managed workflow.
 
 * 🏠 [Homepage](https://github.com/creative-web-solution/wonderpush-expo-plugin#readme)
-* Forked from [https://github.com/LinFeiLong/wonderpush-expo-plugin]()
+* Forked from [https://github.com/creative-web-solution/wonderpush-expo-plugin]()
 
 ## Overview
 This plugin is an [Expo Config Plugin](https://docs.expo.dev/guides/config-plugins/). It extends the Expo config to allow customizing the prebuild phase of managed workflow builds (no need to eject to a bare workflow).
@@ -25,7 +25,7 @@ Add this to the package.json
   ...,
   "devDependencies": {
     ...,
-    "wonderpush-expo-plugin": "https://github.com/creative-web-solution/wonderpush-expo-plugin.git"
+    "wonderpush-expo-plugin": "https://github.com/abraaoz/wonderpush-expo-plugin.git"
   }
 }
 ```
