@@ -121,47 +121,88 @@ const withEasManagedCredentials: ConfigPlugin<WonderPushPluginProps> = (
   return config
 }
 
+const appDelegate: {
+  after?: string;
+  insert: string | ((props: Record<string, string>) => string);
+  before?: string;
+}[] = [
+  {
+    after: `#import "AppDelegate.h"`,
+    insert: `#import <WonderPush/WonderPush.h>`,
+  },
+  {
+    insert: `  [WonderPush application:application didFinishLaunchingWithOptions:launchOptions];`,
+    before: `return [super application:application didFinishLaunchingWithOptions:launchOptions];`,
+  },
+  {
+    insert: `  [WonderPush application:application didRegisterForRemoteNotificationsWithDeviceToken:deviceToken];`,
+    before: `return [super application:application didRegisterForRemoteNotificationsWithDeviceToken:deviceToken];`,
+  },
+  {
+    insert: `  [WonderPush application:application didRegisterForRemoteNotificationsWithDeviceToken:deviceToken];`,
+    before: `return [super application:application didRegisterForRemoteNotificationsWithDeviceToken:deviceToken];`,
+  },
+  {
+    insert: `  [WonderPush application:application didFailToRegisterForRemoteNotificationsWithError:error];`,
+    before: `return [super application:application didFailToRegisterForRemoteNotificationsWithError:error];`,
+  },
+  {
+    insert: `  [WonderPush application:application didReceiveRemoteNotification:userInfo fetchCompletionHandler:completionHandler];`,
+    before: `return [super application:application didReceiveRemoteNotification:userInfo fetchCompletionHandler:completionHandler];`,
+  },
+  {
+    after: `@implementation AppDelegate`,
+    insert: (props) => `
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
+  [WonderPush application:application didReceiveRemoteNotification:userInfo];
+}
+- (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification {
+  [WonderPush application:application didReceiveLocalNotification:notification];
+}
+- (void)applicationDidBecomeActive:(UIApplication *)application {
+  [UIApplication sharedApplication].applicationIconBadgeNumber = 0;
+  [WonderPush applicationDidBecomeActive:application];
+}
+- (void)applicationDidEnterBackground:(UIApplication *)application {
+  [UIApplication sharedApplication].applicationIconBadgeNumber = 0;
+  [WonderPush applicationDidEnterBackground:application];
+}
+- (void)application:(UIApplication *)application didRegisterUserNotificationSettings:(UIUserNotificationSettings *)notificationSettings {
+  [WonderPush application:application didRegisterUserNotificationSettings:notificationSettings];
+}
+- (BOOL)application:(UIApplication *)application willFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+  [WonderPush setLogging:YES];
+  [WonderPush setClientId:@"${props.wonderPushClientId}" secret:@"${props.wonderPushClientSecret}"];
+  [WonderPush setupDelegateForUserNotificationCenter];
+  return YES;
+}`,
+  },
+];
+
 const withAppDelegateCredentials: ConfigPlugin<WonderPushPluginProps> = (
   config,
   props
 ) => {
+  // https://docs.wonderpush.com/docs/ios-sdk#setupdelegateforapplication
   return withAppDelegate(config, async (config) => {
-    config.modResults.contents = config.modResults.contents.replace(
-      `#import "AppDelegate.h"`,
-      `#import "AppDelegate.h"
-
-#import <WonderPush/WonderPush.h>
-
-`
-    )
-
-    config.modResults.contents = config.modResults.contents.replace(
-      `@implementation AppDelegate`,
-      `@implementation AppDelegate
-
-- (BOOL)application:(UIApplication *)application willFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-  [WonderPush setLogging:YES];
-  [WonderPush setClientId:@"` +
-        props.wonderPushClientId +
-        `" secret:@"` +
-        props.wonderPushClientSecret +
-        `"];
-  [WonderPush setupDelegateForApplication:application];
-  [WonderPush setupDelegateForUserNotificationCenter];
-  return YES;
-}
-- (void)applicationDidBecomeActive:(UIApplication *)application{
-  [UIApplication sharedApplication].applicationIconBadgeNumber = 0; 
-}
--(void)applicationDidEnterBackground:(UIApplication *)application{
-  [UIApplication sharedApplication].applicationIconBadgeNumber = 0;
-}
-`
-    )
-
-    return config
-  })
-}
+    appDelegate.forEach(({ after, insert, before }) => {
+      const find = after || before;
+      if (find) {
+        const insertStr = typeof insert === "function" ? insert(props) : insert;
+        const replaceWith = after
+          ? after + "\n" + insertStr
+          : insertStr + "\n" + before;
+        if (!config.modResults.contents.includes(replaceWith)) {
+          config.modResults.contents = config.modResults.contents.replace(
+            find,
+            replaceWith
+          );
+        }
+      }
+    });
+    return config;
+  });
+};
 
 export const withWonderPushIos: ConfigPlugin<WonderPushPluginProps> = (
   config,
