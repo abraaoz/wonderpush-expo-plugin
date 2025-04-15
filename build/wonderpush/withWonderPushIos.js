@@ -8,7 +8,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.xcodeProjectAddNse = exports.withWonderPushIos = void 0;
+exports.withWonderPushIos = void 0;
+exports.xcodeProjectAddNse = xcodeProjectAddNse;
 const assert_1 = __importDefault(require("assert"));
 const fs_1 = __importDefault(require("fs"));
 const xcode_1 = __importDefault(require("xcode"));
@@ -25,7 +26,7 @@ const WonderPushLog_1 = require("../support/WonderPushLog");
  */
 const withAppEnvironment = (config, wonderpushProps) => {
     return (0, config_plugins_1.withEntitlementsPlist)(config, (newConfig) => {
-        if ((wonderpushProps === null || wonderpushProps === void 0 ? void 0 : wonderpushProps.mode) == null) {
+        if (wonderpushProps?.mode == null) {
             throw new Error(`
         Missing required "mode" key in your app.json or app.config.js file for "wonderpush-expo-plugin".
         "mode" can be either "development" or "production".
@@ -60,12 +61,11 @@ const withRemoteNotificationsPermissions = (config) => {
 const withAppGroupPermissions = (config) => {
     const APP_GROUP_KEY = "com.apple.security.application-groups";
     return (0, config_plugins_1.withEntitlementsPlist)(config, (newConfig) => {
-        var _a;
         if (!Array.isArray(newConfig.modResults[APP_GROUP_KEY])) {
             newConfig.modResults[APP_GROUP_KEY] = [];
         }
         const modResultsArray = newConfig.modResults[APP_GROUP_KEY];
-        const entitlement = `group.${((_a = newConfig === null || newConfig === void 0 ? void 0 : newConfig.ios) === null || _a === void 0 ? void 0 : _a.bundleIdentifier) || ""}.WonderPushNotificationServiceExtension`;
+        const entitlement = `group.${newConfig?.ios?.bundleIdentifier || ""}.WonderPushNotificationServiceExtension`;
         if (modResultsArray.indexOf(entitlement) !== -1) {
             return newConfig;
         }
@@ -75,23 +75,21 @@ const withAppGroupPermissions = (config) => {
 };
 const withWonderPushNSE = (config, wonderpushProps) => {
     return (0, config_plugins_1.withXcodeProject)(config, async (props) => {
-        var _a, _b;
         const options = {
             iosPath: props.modRequest.platformProjectRoot,
-            bundleIdentifier: (_a = props.ios) === null || _a === void 0 ? void 0 : _a.bundleIdentifier,
-            devTeam: wonderpushProps === null || wonderpushProps === void 0 ? void 0 : wonderpushProps.devTeam,
-            bundleVersion: (_b = props.ios) === null || _b === void 0 ? void 0 : _b.buildNumber,
-            bundleShortVersion: props === null || props === void 0 ? void 0 : props.version,
-            mode: wonderpushProps === null || wonderpushProps === void 0 ? void 0 : wonderpushProps.mode,
-            iPhoneDeploymentTarget: wonderpushProps === null || wonderpushProps === void 0 ? void 0 : wonderpushProps.iPhoneDeploymentTarget,
+            bundleIdentifier: props.ios?.bundleIdentifier,
+            devTeam: wonderpushProps?.devTeam,
+            bundleVersion: props.ios?.buildNumber,
+            bundleShortVersion: props?.version,
+            mode: wonderpushProps?.mode,
+            iPhoneDeploymentTarget: wonderpushProps?.iPhoneDeploymentTarget,
         };
         xcodeProjectAddNse(props.modRequest.projectName || "", options, "node_modules/wonderpush-expo-plugin/build/support/serviceExtensionFiles/", wonderpushProps);
         return props;
     });
 };
 const withEasManagedCredentials = (config) => {
-    var _a;
-    (0, assert_1.default)((_a = config.ios) === null || _a === void 0 ? void 0 : _a.bundleIdentifier, "Missing 'ios.bundleIdentifier' in app config.");
+    (0, assert_1.default)(config.ios?.bundleIdentifier, "Missing 'ios.bundleIdentifier' in app config.");
     config.extra = (0, getEasManagedCredentialsConfigExtra_1.default)(config);
     return config;
 };
@@ -212,8 +210,8 @@ function xcodeProjectAddNse(appName, options, sourceDir, wonderpushProps) {
         /* MODIFY COPIED EXTENSION FILES */
         const nseUpdater = new NseUpdaterManager_1.default(iosPath);
         await nseUpdater.updateNSEEntitlements(`group.${bundleIdentifier}.WonderPushNotificationServiceExtension`);
-        await nseUpdater.updateNSEBundleVersion(bundleVersion !== null && bundleVersion !== void 0 ? bundleVersion : iosConstants_1.DEFAULT_BUNDLE_VERSION);
-        await nseUpdater.updateNSEBundleShortVersion(bundleShortVersion !== null && bundleShortVersion !== void 0 ? bundleShortVersion : iosConstants_1.DEFAULT_BUNDLE_SHORT_VERSION);
+        await nseUpdater.updateNSEBundleVersion(bundleVersion ?? iosConstants_1.DEFAULT_BUNDLE_VERSION);
+        await nseUpdater.updateNSEBundleShortVersion(bundleShortVersion ?? iosConstants_1.DEFAULT_BUNDLE_SHORT_VERSION);
         // Create new PBXGroup for the extension
         const extGroup = xcodeProject.addPbxGroup(extFiles, iosConstants_1.NSE_TARGET_NAME, iosConstants_1.NSE_TARGET_NAME);
         // Add the new PBXGroup to the top level group. This makes the
@@ -251,7 +249,7 @@ function xcodeProjectAddNse(appName, options, sourceDir, wonderpushProps) {
                 const buildSettingsObj = configurations[key].buildSettings;
                 buildSettingsObj.DEVELOPMENT_TEAM = devTeam;
                 buildSettingsObj.IPHONEOS_DEPLOYMENT_TARGET =
-                    iPhoneDeploymentTarget !== null && iPhoneDeploymentTarget !== void 0 ? iPhoneDeploymentTarget : iosConstants_1.IPHONEOS_DEPLOYMENT_TARGET;
+                    iPhoneDeploymentTarget ?? iosConstants_1.IPHONEOS_DEPLOYMENT_TARGET;
                 buildSettingsObj.TARGETED_DEVICE_FAMILY = iosConstants_1.TARGETED_DEVICE_FAMILY;
                 buildSettingsObj.CODE_SIGN_ENTITLEMENTS = `${iosConstants_1.NSE_TARGET_NAME}/${iosConstants_1.NSE_TARGET_NAME}.entitlements`;
                 buildSettingsObj.CODE_SIGN_STYLE = "Automatic";
@@ -263,4 +261,3 @@ function xcodeProjectAddNse(appName, options, sourceDir, wonderpushProps) {
         fs_1.default.writeFileSync(projPath, xcodeProject.writeSync());
     });
 }
-exports.xcodeProjectAddNse = xcodeProjectAddNse;

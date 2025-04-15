@@ -6,8 +6,8 @@ const iosConstants_1 = require("./iosConstants");
 const entitlementsFileName = `WonderPushNotificationServiceExtension.entitlements`;
 const plistFileName = `WonderPushNotificationServiceExtension-Info.plist`;
 class NseUpdaterManager {
+    nsePath = "";
     constructor(iosPath) {
-        this.nsePath = "";
         this.nsePath = `${iosPath}/${iosConstants_1.NSE_TARGET_NAME}`;
     }
     async updateNSEEntitlements(groupIdentifier) {

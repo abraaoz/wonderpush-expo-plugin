@@ -5,4 +5,4 @@ var Mode;
 (function (Mode) {
     Mode["Dev"] = "development";
     Mode["Prod"] = "production";
-})(Mode = exports.Mode || (exports.Mode = {}));
+})(Mode || (exports.Mode = Mode = {}));
